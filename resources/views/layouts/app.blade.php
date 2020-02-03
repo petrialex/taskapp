@@ -7,72 +7,75 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'TaskApp') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600" rel="stylesheet"><!-- End GOOGLE FONT -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"><!-- End GOOGLE FONT -->
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://uselooper.com/assets/vendor/fontawesome/css/all.css">
+    <link rel="stylesheet" href="https://uselooper.com/assets/vendor/tributejs/tribute.css">
+    <link rel="stylesheet" href="https://uselooper.com/assets/vendor/simplemde/simplemde.min.css">
+    <link rel="stylesheet" href="https://uselooper.com/assets/vendor/flatpickr/flatpickr.min.css">END PLUGINS STYLES -->
+
+
 </head>
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+            <div class="top-bar">
+            <!-- .top-bar-brand -->
+            <div class="top-bar-brand">
+                <!-- toggle aside menu -->
+                <button class="hamburger hamburger-squeeze mr-2" type="button" data-toggle="aside-menu" aria-label="toggle aside menu"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button> <!-- /toggle aside menu -->
+                <a href="">TaskApp</a>
+            </div><!-- /.top-bar-brand -->
+            <!-- .top-bar-list -->
+            <div class="top-bar-list">
+                <!-- .top-bar-item -->
+                <div class="top-bar-item px-2 d-md-none d-lg-none d-xl-none">
+                <!-- toggle menu -->
+                <button class="hamburger hamburger-squeeze" type="button" data-toggle="aside" aria-label="toggle menu"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button> <!-- /toggle menu -->
+                </div><!-- /.top-bar-item -->
+                <!-- .top-bar-item -->
+                <div class="top-bar-item top-bar-item-full">
+                <!-- .top-bar-search -->
+                </div><!-- /.top-bar-item -->
+                <!-- .top-bar-item -->
+                <div class="top-bar-item top-bar-item-right px-0 d-none d-sm-flex">
+                <!-- .nav -->
+                
+                <!-- .btn-account -->
+                <div class="dropdown d-flex">
+                    <button class="btn-account d-none d-md-flex" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="user-avatar user-avatar-md">
+                            <img src="{{ Voyager::image(  Auth::user()->avatar ) }}" alt="">
+                        </span> 
+                        <span class="account-summary pr-lg-4 d-none d-lg-block">
+                            <span class="account-name">{{ Auth::user()->name }}</span>
+                            <span class="account-description">Marketing Manager</span >
+                        </span>
+                    </button> <!-- .dropdown-menu -->
+                    <div class="dropdown-menu">
+                    <div class="dropdown-arrow ml-3"></div>
+                    <h6 class="dropdown-header d-none d-md-block d-lg-none"> Beni Arisandi </h6><a class="dropdown-item" href="user-profile.html"><span class="dropdown-icon oi oi-person"></span> Profile</a> <a class="dropdown-item" href="auth-signin-v1.html"><span class="dropdown-icon oi oi-account-logout"></span> Logout</a>
+                    <div class="dropdown-divider"></div><a class="dropdown-item" href="#">Help Center</a> <a class="dropdown-item" href="#">Ask Forum</a> <a class="dropdown-item" href="#">Keyboard Shortcuts</a>
+                    </div><!-- /.dropdown-menu -->
+                </div><!-- /.btn-account -->
+                </div><!-- /.top-bar-item -->
+            </div><!-- /.top-bar-list -->
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="app-main">
             @yield('content')
         </main>
     </div>

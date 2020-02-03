@@ -17,7 +17,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
+Route::post('/add-new-task', 'HomeController@addTask')->name('add-task')->middleware('auth');
 
 
 Route::group(['prefix' => 'admin'], function () {
