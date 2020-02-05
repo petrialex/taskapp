@@ -1,6 +1,49 @@
 @extends('layouts.app')
 
 @section('content')
+    <aside class="app-aside app-aside-expand-md app-aside-light">
+        <!-- .aside-content -->
+        <div class="aside-content">
+            <!-- .aside-header -->
+            <!-- .aside-menu -->
+            <div class="aside-menu overflow-hidden ps">
+                <!-- .stacked-menu -->
+                <nav id="stacked-menu" class="stacked-menu stacked-menu-has-collapsible">
+                    <!-- .menu -->
+                    <ul class="menu">
+                        <!-- .menu-item -->
+                        <li class="menu-item">
+                            <a href="/dashboard" class="menu-link"><span class="menu-icon fa fa-home"></span> <span class="menu-text">Dashboard</span></a>
+                        </li><!-- /.menu-item -->
+
+                        <li class="menu-item">
+                            <a href="#" class="menu-link"><span class="menu-icon fa fa-rocket"></span> <span class="menu-text">Projects</span></a>
+                            <ul class="menu">
+                                @foreach($projects as $projectDetails)
+
+                                    <li class="menu-item  <?php echo ($project && $projectDetails->id == $project->id) ? 'has-active':''; ?>">
+                                        <a  href="{{ route('home') }}?project={{ $projectDetails->id }}" class="menu-link">{{ $projectDetails->name }}</a>
+                                    </li>
+                                @endforeach
+
+                            </ul>
+                        </li><!-- /.menu-item -->
+                        <li class="menu-item">
+                            <a href="/my-issues?project={{ $project->id }}" class="menu-link"><span class="menu-icon fa fa-tasks"></span> <span class="menu-text">My opened issues</span></a>
+                        </li><!-- /.menu-item -->
+                        <li class="menu-item">
+                            <a href="/all-issues?project={{ $project->id }}" class="menu-link"><span class="menu-icon fa fa-table"></span> <span class="menu-text">All project issues</span></a>
+                        </li><!-- /.menu-item -->
+                        <li class="menu-item">
+                            <a href="/reported-by-me?project={{ $project->id }}" class="menu-link"><span class="menu-icon fa fa-flag"></span> <span class="menu-text">Reported by me</span></a>
+                        </li><!-- /.menu-item -->
+
+                    </ul><!-- /.menu -->
+                </nav><!-- /.stacked-menu -->
+
+            </div>
+    </aside>
+    <main class="app-main">
   <!-- .wrapper -->
   <div class="wrapper">
     <!-- .page -->
@@ -12,11 +55,11 @@
           <!-- .btn-account -->
           <a href="{{ route('home') }}?project={{ $project->id }}" class="btn-account">
             <div class="has-badge">
-              <span class="tile bg-pink text-white">{{ $project->code }}</span> <span class="user-avatar user-avatar-xs"><img src="https://uselooper.com/assets/images/avatars/team4.jpg" alt=""></span>
+
             </div>
             <div class="account-summary">
               <h1 class="card-title"> {{ $project->name }} </h1>
-              <h6 class="card-subtitle text-muted"> 4 deadline · 2 overdue </h6>
+              <h6 class="card-subtitle text-muted"> {{ count($projectTasks) }} task(s) </h6>
             </div>
           </a> <!-- /.btn-account -->
           <!-- right actions -->
@@ -59,6 +102,9 @@
               <!-- .task-body -->
               <div class="task-body" data-toggle="sortable" data-group="tasks" data-delay="50" data-force-fallback="true">
               @foreach ($tasks[$status->id] as $task)
+                  <?php
+                  $taskUser = \App\User::where(['id' => $task->user_id])->first();
+                  ?>
                   <!-- .task-issue -->
                   <div class="task-issue">
                     <!-- .card -->
@@ -72,35 +118,31 @@
                           <a href="#" data-toggle="modal" data-target="#modalViewTask">{{ $task->title }}</a>
                         </h4>
                         <h6 class="card-subtitle text-muted">
-                          <span class="text-muted">03:11</span> / <span class="text-muted">6:00</span> <span class="mx-1">·</span> <span class="due-date"><i class="fa fa-fw fa-clock"></i> Apr 07</span>
+                          <span class="text-muted">{{ $task->due_date }}</span>
                         </h6>
                       </div><!-- /.card-header -->
                       <!-- .card-body -->
                       <div class="card-body pt-0">
-                        <!-- .list-group -->
+
                         <div class="list-group">
-                          <!-- .list-group-item -->
+
                           <div class="list-group-item" data-toggle="modal" data-target="#modalViewTask">
                             <a href="#" class="stretched-link"></a> <!-- .list-group-item-body -->
                             <div class="list-group-item-body">
                               <!-- members -->
                               <figure class="user-avatar user-avatar-sm" data-toggle="tooltip" title="" data-original-title="Johnny Day">
-                                <img src="https://uselooper.com/assets/images/avatars/uifaces2.jpg" alt="Johnny Day">
+                                <img src="{{ Voyager::image(  $taskUser->avatar ) }}" alt="{{$taskUser->name}}">
                               </figure>
-                              <figure class="user-avatar user-avatar-sm" data-toggle="tooltip" title="" data-original-title="Sarah Bishop">
-                                <img src="https://uselooper.com/assets/images/avatars/uifaces3.jpg" alt="Sarah Bishop">
-                              </figure><!-- /members -->
-                            </div><!-- /.list-group-item-body -->
-                          </div><!-- /.list-group-item -->
-                        </div><!-- /.list-group -->
-                      </div><!-- /.card-body -->
-                      <!-- .card-footer -->
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       <div class="card-footer">
                         <a href="#" class="card-footer-item card-footer-item-bordered text-muted" data-toggle="modal" data-target="#modalViewTask" draggable="false"><i class="fa fa-comments mr-1"></i> 36</a>
-                        <a href="#" class="card-footer-item card-footer-item-bordered text-muted" draggable="false"><i class="fa fa-pause"></i></a>
-                      </div><!-- /.card-footer -->
-                    </div><!-- .card -->
-                  </div><!-- /.task-issue -->
+                      </div>
+                    </div>
+                  </div>
               @endforeach
               </div><!-- /.task-body -->
             </div>
@@ -111,290 +153,37 @@
     <!-- Layer #1 Modal -->
     <!-- .modalBoardConfig -->
     <div class="modal modal-drawer fade" id="modalBoardConfig" tabindex="-1" role="dialog" aria-labelledby="modalBoardConfigTitle" aria-hidden="true">
-      <!-- .modal-dialog -->
+
       <div class="modal-dialog modal-drawer-right" role="document">
-        <!-- .modal-content -->
+
         <div id="modalContentLayer1" class="modal-content">
           <!-- .modal-header -->
           <div class="modal-header">
             <h5 id="modalBoardConfigTitle" class="modal-title"> Menu </h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
           </div><!-- /.modal-header -->
-          <!-- .modal-body -->
+
           <div class="modal-body">
             <!-- .nav -->
             <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link" href="#modalLayer2" data-toggle="modal" data-dismiss="modal" data-content-layer="board-overview.html">Overview</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#modalLayer2" data-toggle="modal" data-dismiss="modal" data-content-layer="board-teams.html">Teams</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#modalLayer2" data-toggle="modal" data-dismiss="modal" data-content-layer="board-time-tracking.html">Time tracking</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#modalLayer2" data-toggle="modal" data-dismiss="modal" data-content-layer="board-files.html">Files</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#modalLayer2" data-toggle="modal" data-dismiss="modal" data-content-layer="board-feeds.html">Feeds</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#modalLayer2" data-toggle="modal" data-dismiss="modal" data-content-layer="board-tickets.html">Tickets</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#modalLayer2" data-toggle="modal" data-dismiss="modal" data-content-layer="board-settings.html">Settings</a>
-              </li>
+
             </ul><!-- /.nav -->
             <hr>
             <h2 class="section-title">
               <i class="oi oi-pulse text-muted mr-2"></i>Recent activity </h2><!-- .timeline -->
-            <ul class="timeline timeline-fluid">
-              <!-- .timeline-item -->
-              <li class="timeline-item">
-                <!-- .timeline-figure -->
-                <div class="timeline-figure">
-                  <span class="tile tile-circle tile-sm"><i class="far fa-calendar-alt fa-lg"></i></span>
-                </div><!-- /.timeline-figure -->
-                <!-- .timeline-body -->
-                <div class="timeline-body">
-                  <!-- .media -->
-                  <div class="media">
-                    <!-- .media-body -->
-                    <div class="media-body">
-                      <p class="mb-0">
-                        <a href="#">Jeffrey Wells</a> created a <a href="#">schedule</a>
-                      </p><span class="timeline-date">About a minute ago</span>
-                    </div><!-- /.media-body -->
-                  </div><!-- /.media -->
-                </div><!-- /.timeline-body -->
-              </li><!-- /.timeline-item -->
-              <!-- .timeline-item -->
-              <li class="timeline-item">
-                <!-- .timeline-figure -->
-                <div class="timeline-figure">
-                  <span class="tile tile-circle tile-sm"><i class="oi oi-chat fa-lg"></i></span>
-                </div><!-- /.timeline-figure -->
-                <!-- .timeline-body -->
-                <div class="timeline-body">
-                  <!-- .media -->
-                  <div class="media">
-                    <!-- .media-body -->
-                    <div class="media-body">
-                      <p class="mb-0">
-                        <a href="#">Anna Vargas</a> logged a <a href="#">chat</a> with team </p><span class="timeline-date">3 hours ago</span>
-                    </div><!-- /.media-body -->
-                  </div><!-- /.media -->
-                </div><!-- /.timeline-body -->
-              </li><!-- /.timeline-item -->
-              <!-- .timeline-item -->
-              <li class="timeline-item">
-                <!-- .timeline-figure -->
-                <div class="timeline-figure">
-                  <span class="tile tile-circle tile-sm"><i class="fa fa-tasks fa-lg"></i></span>
-                </div><!-- /.timeline-figure -->
-                <!-- .timeline-body -->
-                <div class="timeline-body">
-                  <!-- .media -->
-                  <div class="media">
-                    <!-- .media-body -->
-                    <div class="media-body">
-                      <p class="mb-0">
-                        <a href="#">Arthur Carroll</a> created a <a href="#">task</a>
-                      </p><span class="timeline-date">8:14pm</span>
-                    </div><!-- /.media-body -->
-                  </div><!-- /.media -->
-                </div><!-- /.timeline-body -->
-              </li><!-- /.timeline-item -->
-              <!-- .timeline-item -->
-              <li class="timeline-item">
-                <!-- .timeline-figure -->
-                <div class="timeline-figure">
-                  <span class="tile tile-circle tile-sm"><i class="fas fa-user-plus fa-lg"></i></span>
-                </div><!-- /.timeline-figure -->
-                <!-- .timeline-body -->
-                <div class="timeline-body">
-                  <!-- .media -->
-                  <div class="media">
-                    <!-- .media-body -->
-                    <div class="media-body">
-                      <p class="mb-0">
-                        <a href="#">Sara Carr</a> invited to <a href="#">Stilearn Admin</a> project </p><span class="timeline-date">7:21pm</span>
-                    </div><!-- /.media-body -->
-                  </div><!-- /.media -->
-                </div><!-- /.timeline-body -->
-              </li><!-- /.timeline-item -->
-              <!-- .timeline-item -->
-              <li class="timeline-item">
-                <!-- .timeline-figure -->
-                <div class="timeline-figure">
-                  <span class="tile tile-circle tile-sm"><i class="fa fa-folder fa-lg"></i></span>
-                </div><!-- /.timeline-figure -->
-                <!-- .timeline-body -->
-                <div class="timeline-body">
-                  <!-- .media -->
-                  <div class="media">
-                    <!-- .media-body -->
-                    <div class="media-body">
-                      <p class="mb-0">
-                        <a href="#">Angela Peterson</a> added <a href="#">Looper Admin</a> to collection </p><span class="timeline-date">5:21pm</span>
-                    </div><!-- /.media-body -->
-                  </div><!-- /.media -->
-                </div><!-- /.timeline-body -->
-              </li><!-- /.timeline-item -->
-              <!-- .timeline-item -->
-              <li class="timeline-item">
-                <!-- .timeline-figure -->
-                <div class="timeline-figure">
-                  <span class="tile tile-circle tile-sm"><i class="oi oi-person fa-lg"></i></span>
-                </div><!-- /.timeline-figure -->
-                <!-- .timeline-body -->
-                <div class="timeline-body">
-                  <!-- .media -->
-                  <div class="media">
-                    <!-- .media-body -->
-                    <div class="media-body">
-                      <div class="avatar-group mb-2">
-                        <a href="#" class="user-avatar user-avatar-sm"><img src="https://uselooper.com/assets/images/avatars/uifaces4.jpg" alt=""></a> <a href="#" class="user-avatar user-avatar-sm"><img src="https://uselooper.com/assets/images/avatars/uifaces5.jpg" alt=""></a> <a href="#" class="user-avatar user-avatar-sm"><img src="https://uselooper.com/assets/images/avatars/uifaces6.jpg" alt=""></a> <a href="#" class="user-avatar user-avatar-sm"><img src="https://uselooper.com/assets/images/avatars/uifaces7.jpg" alt=""></a>
-                      </div>
-                      <p class="mb-0">
-                        <a href="#">Willie Dixon</a> and 3 others followed you </p><span class="timeline-date">4:32pm</span>
-                    </div><!-- /.media-body -->
-                  </div><!-- /.media -->
-                </div><!-- /.timeline-body -->
-              </li><!-- /.timeline-item -->
-            </ul><!-- /.timeline -->
-            <!-- .timeline -->
-            <ul class="timeline timeline-fluid">
-              <!-- .timeline-item -->
-              <li class="timeline-item">
-                <!-- .timeline-figure -->
-                <div class="timeline-figure">
-                  <span class="tile tile-circle tile-sm"><i class="far fa-calendar-alt fa-lg"></i></span>
-                </div><!-- /.timeline-figure -->
-                <!-- .timeline-body -->
-                <div class="timeline-body">
-                  <!-- .media -->
-                  <div class="media">
-                    <!-- .media-body -->
-                    <div class="media-body">
-                      <p class="mb-0">
-                        <a href="#">Jeffrey Wells</a> created a <a href="#">schedule</a>
-                      </p><span class="timeline-date">About a minute ago</span>
-                    </div><!-- /.media-body -->
-                  </div><!-- /.media -->
-                </div><!-- /.timeline-body -->
-              </li><!-- /.timeline-item -->
-              <!-- .timeline-item -->
-              <li class="timeline-item">
-                <!-- .timeline-figure -->
-                <div class="timeline-figure">
-                  <span class="tile tile-circle tile-sm"><i class="oi oi-chat fa-lg"></i></span>
-                </div><!-- /.timeline-figure -->
-                <!-- .timeline-body -->
-                <div class="timeline-body">
-                  <!-- .media -->
-                  <div class="media">
-                    <!-- .media-body -->
-                    <div class="media-body">
-                      <p class="mb-0">
-                        <a href="#">Anna Vargas</a> logged a <a href="#">chat</a> with team </p><span class="timeline-date">3 hours ago</span>
-                    </div><!-- /.media-body -->
-                  </div><!-- /.media -->
-                </div><!-- /.timeline-body -->
-              </li><!-- /.timeline-item -->
-              <!-- .timeline-item -->
-              <li class="timeline-item">
-                <!-- .timeline-figure -->
-                <div class="timeline-figure">
-                  <span class="tile tile-circle tile-sm"><i class="fa fa-tasks fa-lg"></i></span>
-                </div><!-- /.timeline-figure -->
-                <!-- .timeline-body -->
-                <div class="timeline-body">
-                  <!-- .media -->
-                  <div class="media">
-                    <!-- .media-body -->
-                    <div class="media-body">
-                      <p class="mb-0">
-                        <a href="#">Arthur Carroll</a> created a <a href="#">task</a>
-                      </p><span class="timeline-date">8:14pm</span>
-                    </div><!-- /.media-body -->
-                  </div><!-- /.media -->
-                </div><!-- /.timeline-body -->
-              </li><!-- /.timeline-item -->
-              <!-- .timeline-item -->
-              <li class="timeline-item">
-                <!-- .timeline-figure -->
-                <div class="timeline-figure">
-                  <span class="tile tile-circle tile-sm"><i class="fas fa-user-plus fa-lg"></i></span>
-                </div><!-- /.timeline-figure -->
-                <!-- .timeline-body -->
-                <div class="timeline-body">
-                  <!-- .media -->
-                  <div class="media">
-                    <!-- .media-body -->
-                    <div class="media-body">
-                      <p class="mb-0">
-                        <a href="#">Sara Carr</a> invited to <a href="#">Stilearn Admin</a> project </p><span class="timeline-date">7:21pm</span>
-                    </div><!-- /.media-body -->
-                  </div><!-- /.media -->
-                </div><!-- /.timeline-body -->
-              </li><!-- /.timeline-item -->
-              <!-- .timeline-item -->
-              <li class="timeline-item">
-                <!-- .timeline-figure -->
-                <div class="timeline-figure">
-                  <span class="tile tile-circle tile-sm"><i class="fa fa-folder fa-lg"></i></span>
-                </div><!-- /.timeline-figure -->
-                <!-- .timeline-body -->
-                <div class="timeline-body">
-                  <!-- .media -->
-                  <div class="media">
-                    <!-- .media-body -->
-                    <div class="media-body">
-                      <p class="mb-0">
-                        <a href="#">Angela Peterson</a> added <a href="#">Looper Admin</a> to collection </p><span class="timeline-date">5:21pm</span>
-                    </div><!-- /.media-body -->
-                  </div><!-- /.media -->
-                </div><!-- /.timeline-body -->
-              </li><!-- /.timeline-item -->
-              <!-- .timeline-item -->
-              <li class="timeline-item">
-                <!-- .timeline-figure -->
-                <div class="timeline-figure">
-                  <span class="tile tile-circle tile-sm"><i class="oi oi-person fa-lg"></i></span>
-                </div><!-- /.timeline-figure -->
-                <!-- .timeline-body -->
-                <div class="timeline-body">
-                  <!-- .media -->
-                  <div class="media">
-                    <!-- .media-body -->
-                    <div class="media-body">
-                      <div class="avatar-group mb-2">
-                        <a href="#" class="user-avatar user-avatar-sm"><img src="https://uselooper.com/assets/images/avatars/uifaces4.jpg" alt=""></a> <a href="#" class="user-avatar user-avatar-sm"><img src="https://uselooper.com/assets/images/avatars/uifaces5.jpg" alt=""></a> <a href="#" class="user-avatar user-avatar-sm"><img src="https://uselooper.com/assets/images/avatars/uifaces6.jpg" alt=""></a> <a href="#" class="user-avatar user-avatar-sm"><img src="https://uselooper.com/assets/images/avatars/uifaces7.jpg" alt=""></a>
-                      </div>
-                      <p class="mb-0">
-                        <a href="#">Willie Dixon</a> and 3 others followed you </p><span class="timeline-date">4:32pm</span>
-                    </div><!-- /.media-body -->
-                  </div><!-- /.media -->
-                </div><!-- /.timeline-body -->
-              </li><!-- /.timeline-item -->
-            </ul><!-- /.timeline -->
+
             <div class="text-center p-3">
               <a href="#" class="btn btn-link">View all activity ...</a>
             </div>
-          </div><!-- /.modal-body -->
-        </div><!-- .modal-content -->
-      </div><!-- /.modal-dialog -->
+          </div>
+        </div>
+      </div>
     </div><!-- /.modalBoardConfig -->
-    <!-- /Layer #1 Modal -->
-    <!-- Layer #2 Modal -->
-    <!-- You can create modal as many as your menu or simply create
-layer modal with dinamy content to handle your menus (overview, members, time tracking, and so on) -->
+
     <!-- .modalBoardConfig -->
     <div class="modal modal-drawer fade" id="modalLayer2" tabindex="-1" role="dialog" aria-labelledby="modalLayer2Title" aria-hidden="true">
-      <!-- .modal-dialog -->
+
       <div class="modal-dialog modal-drawer-right" role="document">
-        <!-- .modal-content -->
+
         <div id="modalContentLayer2" class="modal-content">
           <!-- .modal-header -->
           <div class="modal-header d-block">
@@ -407,33 +196,32 @@ layer modal with dinamy content to handle your menus (overview, members, time tr
               <span id="layer-title">Overview</span>
             </h5>
           </div><!-- /.modal-header -->
-          <!-- .modal-body -->
+
           <div class="modal-body">
             <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod, neque odio nisi. </p>
-          </div><!-- /.modal-body -->
-        </div><!-- .modal-content -->
-      </div><!-- /.modal-dialog -->
+          </div>
+        </div>
+      </div>
     </div><!-- /.modalBoardConfig -->
-    <!-- /Layer #2 Modal -->
-    <!-- .form -->
+
     <form id="addNewTask" action="{{ route('add-task') }}?project={{ $project->id }}" method="post" enctype="multipart/form-data" name="addNewTask">
       <!-- .modal -->
       <div class="modal fade" id="modalNewTask" tabindex="-1" role="dialog" aria-labelledby="modalNewTaskLabel" aria-hidden="true">
-        <!-- .modal-dialog -->
+
         <div class="modal-dialog modal-lg" role="document">
-          <!-- .modal-content -->
+
           <div class="modal-content px-lg-4 py-lg-3">
             <!-- .modal-header -->
             <div class="modal-header">
               <h6 id="modalNewTaskLabel" class="modal-title"> Add new tasks </h6>
             </div><!-- /.modal-header -->
-            <!-- .modal-body -->
+
             <div class="modal-body">
-              <!-- .form-group -->
+
               <div class="form-group">
                 <label for="tasksTitle">Title</label> <input type="text" name="taskTitle" id="tasksTitle" class="form-control" required="" autocomplete="off" data-autofocus="true">
-              </div><!-- /.form-group -->
-              <!-- .form-group -->
+              </div>
+
               <div class="form-group">
                 <div class="d-flex justify-content-between">
                   <label for="taskDescription">Description</label>
@@ -443,11 +231,11 @@ layer modal with dinamy content to handle your menus (overview, members, time tr
               </div>
 
               <hr>
-              <!-- .form-group -->
+
               <div class="form-group form-row">
                 <!-- .col -->
                 <div class="col-md-6">
-                  <!-- .form-group -->
+
                   <div class="form-group">
                     <label>Assignee</label>
                     <select class="form-control">
@@ -462,7 +250,7 @@ layer modal with dinamy content to handle your menus (overview, members, time tr
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <!-- .form-group -->
+
                   <div class="form-group">
                     <label class="control-label" for="taskDueDate">Due date</label>
                     <div class="input-group input-group-alt flatpickr" data-toggle="flatpickr" data-wrap="true" data-min-date="today">
@@ -471,27 +259,27 @@ layer modal with dinamy content to handle your menus (overview, members, time tr
                         <button type="button" class="btn btn-secondary" data-toggle=""><i class="far fa-calendar"></i></button> <button type="button" class="btn btn-secondary" data-clear=""><i class="fa fa-times"></i></button>
                       </div>
                     </div>
-                  </div><!-- /.form-group -->
-                </div><!-- /.col -->
-              </div><!-- /.form-group -->
+                  </div>
+                </div>
+              </div>
 
-            </div><!-- /.modal-body -->
+            </div>
             <hr>
-            <!-- .modal-footer -->
+
             <div class="modal-footer">
               <button type="submit" class="btn btn-primary">Save</button> <button type="reset" class="btn btn-light" data-dismiss="modal">Cancel</button>
-            </div><!-- /.modal-footer -->
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-    </form><!-- /.form -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
     <!-- .modal -->
     <div class="modal modal-drawer fade has-shown" id="modalViewTask" tabindex="-1" role="dialog" aria-labelledby="modalViewTaskLabel" style="display: none;" aria-hidden="true">
-      <!-- .modal-dialog -->
+
       <div class="modal-dialog modal-lg modal-drawer-right" role="document">
-        <!-- .modal-content -->
+
         <div class="modal-content">
-          <!-- .modal-body -->
+
           <div class="modal-body p-3 p-lg-4">
             <ol class="breadcrumb">
               <li class="breadcrumb-item active">
@@ -505,23 +293,23 @@ layer modal with dinamy content to handle your menus (overview, members, time tr
             <hr>
             <div class="task-description">
               <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus perferendis magnam fugit veritatis numquam perspiciatis. Mollitia optio vero eum velit, recusandae! Amet in consectetur expedita repellat, obcaecati non deserunt molestias. </p>
-            </div><!-- grid row -->
+            </div>
             <div class="row my-3">
-              <!-- grid column -->
+
               <div class="col-6 mb-3">
-                <!-- .time-tracking -->
+
                 <div class="time-tracking">
                   <h6> Time tracking </h6><button class="btn btn-subtle-success btn-icon"><i class="fa fa-play"></i></button> <span class="counter ml-1"><span class="hours">00</span> <span class="separtor">:</span> <span class="minutes">00</span> <span class="separtor">:</span> <span class="second">00</span></span> / <span class="estimate">8h</span>
-                </div><!-- /.time-tracking -->
-              </div><!-- /grid column -->
-              <!-- grid column -->
+                </div>
+              </div>
+
               <div class="col-6 mb-3">
                 <h6> Due date </h6>
                 <div class="inline-editable pt-1">
                   <input type="text" class="form-control" value="No due date">
                 </div>
-              </div><!-- /grid column -->
-              <!-- grid column -->
+              </div>
+
               <div class="col-6 mb-3">
                 <h6> Labels </h6><span class="tile bg-green"></span> <span class="tile bg-pink"></span> <span class="tile bg-yellow"></span>
                 <div class="dropdown d-inline-block">
@@ -539,8 +327,8 @@ layer modal with dinamy content to handle your menus (overview, members, time tr
                     <div class="dropdown-divider"></div><a href="#" class="dropdown-item">Create new label</a> <a href="#" class="dropdown-item">Manage labels</a>
                   </div><!-- /.dropdown-menu -->
                 </div>
-              </div><!-- /grid column -->
-              <!-- grid column -->
+              </div>
+
               <div class="col-6 mb-3">
                 <!-- .assignee -->
                 <div class="assignee">
@@ -567,9 +355,9 @@ layer modal with dinamy content to handle your menus (overview, members, time tr
                     </div>
                   </div>
                 </div><!-- /.assignee -->
-              </div><!-- /grid column -->
+              </div>
             </div><!-- /grid row -->
-            <!-- .form-group -->
+
             <div class="form-group">
               <div class="d-flex justify-content-between">
                 <label>Todos</label> <span class="text-muted">(2/3)</span>
@@ -578,46 +366,46 @@ layer modal with dinamy content to handle your menus (overview, members, time tr
                 <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="66.67" aria-valuemin="0" aria-valuemax="100" style="width: 66.67%">
                   <span class="sr-only">66.67% Complete</span>
                 </div>
-              </div><!-- /.progress -->
-            </div><!-- /.form-group -->
-            <!-- .form-group -->
+              </div>
+            </div>
+
             <div class="form-group">
               <!-- save task todos to this input hidden -->
               <input type="hidden" name="vtTodos"> <!-- .todo-list -->
               <div id="vtTodos" class="todo-list">
-                <!-- .todo -->
+
                 <div class="todo">
-                  <!-- .custom-control -->
+
                   <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="vtodo0" value="0" checked=""> <label class="custom-control-label" for="vtodo0">Eat corn on the cob</label>
-                  </div><!-- /.custom-control -->
-                  <!-- .todo-actions -->
+                  </div><
+
                   <div class="todo-actions pr-1">
                     <button type="button" class="btn btn-sm btn-light">Delete</button>
-                  </div><!-- /.todo-actions -->
-                </div><!-- /.todo -->
-                <!-- .todo -->
+                  </div>
+                </div>
+
                 <div class="todo">
-                  <!-- .custom-control -->
+
                   <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="vtodo1" value="1"> <label class="custom-control-label" for="vtodo1">Mix up a pitcher of sangria</label>
-                  </div><!-- /.custom-control -->
-                  <!-- .todo-actions -->
+                  </div><
+
                   <div class="todo-actions pr-1">
                     <button type="button" class="btn btn-sm btn-light">Delete</button>
-                  </div><!-- /.todo-actions -->
-                </div><!-- /.todo -->
-                <!-- .todo -->
+                  </div>
+                </div>
+
                 <div class="todo">
-                  <!-- .custom-control -->
+
                   <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="vtodo2" value="2" checked=""> <label class="custom-control-label" for="vtodo2">Have a barbecue</label>
-                  </div><!-- /.custom-control -->
-                  <!-- .todo-actions -->
+                  </div><
+
                   <div class="todo-actions pr-1">
                     <button type="button" class="btn btn-sm btn-light">Delete</button>
-                  </div><!-- /.todo-actions -->
-                </div><!-- /.todo -->
+                  </div>
+                </div>
               </div><!-- /.todo-list -->
               <!-- .publisher -->
               <div class="publisher">
@@ -630,40 +418,41 @@ layer modal with dinamy content to handle your menus (overview, members, time tr
                   <!-- .publisher-tools -->
                   <div class="publisher-tools pb-0">
                     <button type="button" class="btn btn-secondary">Add</button> <button type="button" class="btn btn-light"><i class="fa fa-times"></i></button>
-                  </div><!-- /.publisher-tools -->
-                </div><!-- /.publisher-actions -->
-              </div><!-- /.publisher -->
-            </div><!-- /.form-group -->
+                  </div>
+                </div>
+              </div>
+            </div>
             <hr>
-            <!-- .media -->
+
             <div class="media">
               <figure class="user-avatar user-avatar-md mr-2">
                 <img src="https://uselooper.com/assets/images/avatars/profile.jpg" alt="">
-              </figure><!-- .media-body -->
+              </figure>
               <div class="media-body">
-                <!-- .publisher -->
+
                 <div class="publisher keep-focus focus">
-                  <label for="publisherInput7" class="publisher-label">Add comment</label> <!-- .publisher-input -->
+                  <label for="publisherInput7" class="publisher-label">Add comment</label>
                   <div class="publisher-input">
                     <textarea id="publisherInput7" class="form-control" placeholder="Write a comment"></textarea>
-                  </div><!-- /.publisher-input -->
-                  <!-- .publisher-actions -->
+                  </div>
+
                   <div class="publisher-actions">
-                    <!-- .publisher-tools -->
+
                     <div class="publisher-tools mr-auto">
                       <div class="btn btn-light btn-icon fileinput-button">
                         <i class="fa fa-paperclip"></i> <input type="file" id="attachment7" name="attachment7[]" multiple="">
                       </div><button type="button" class="btn btn-light btn-icon"><i class="far fa-smile"></i></button>
-                    </div><!-- /.publisher-tools -->
+                    </div>
                     <button type="submit" class="btn btn-primary">Publish</button>
-                  </div><!-- /.publisher-actions -->
-                </div><!-- /.publisher -->
-              </div><!-- /.media-body -->
-            </div><!-- /.media -->
-          </div><!-- /.modal-body -->
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-  </div><!-- /.wrapper -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    </main>
 
 @endsection

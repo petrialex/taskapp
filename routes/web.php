@@ -11,13 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('home');
+//})->middleware('auth');
 
 Auth::routes();
 
+Route::get('/', 'HomeController@index')->name('home')->middleware('auth');
+Route::get('/profile', 'UserController@index')->name('home')->middleware('auth');
 Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
+Route::get('/dashboard', 'HomeController@showDashboard')->name('dashboard')->middleware('auth');
 Route::post('/add-new-task', 'HomeController@addTask')->name('add-task')->middleware('auth');
 
 

@@ -28,7 +28,6 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-
         $projects = Project::all();
         $projectId = $request->get('project')?$request->get('project'):$projects[0]->id;
         $project = Project::findOrFail($projectId);
@@ -39,18 +38,48 @@ class HomeController extends Controller
             $projectTasks = Task::where(['project_id' => $projectId, 'status_id' => $status->id ])->get();
             $projectTasksPerStatus[$status->id] = $projectTasks;
         }
+        $currentProjectTasks = Task::where(['project_id' => $projectId])->get();
 
         return view('home',[
            'project' => $project,
            'statuses' => $statuses,
            'users' => $users,
            'tasks' => $projectTasksPerStatus,
+           'projectTasks' => $currentProjectTasks,
+           'projects' => $projects,
+        ]);
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function showDashboard(Request $request)
+    {
+        $projects = Project::all();
+        $users = User::all();
+        $tasks = Task::all();
+        $tasksInProgress = Task::where(['status_id' => 2])->get();
+        $statuses = Status::all();
+        $tasksPerProject = [];
+        foreach ($projects as $project){
+            $projectTasks = Task::where(['project_id' => $project->id, 'status_id' => 1 ])->get();
+            $tasksPerProject[$project->id] = $projectTasks;
+        }
+
+        return view('dashboard',[
+            'users' => $users,
+            'projects' => $projects,
+            'tasks' => $tasks,
+            'tasksInProgress' => $tasksInProgress,
+            'tasksPerProject' => $tasksPerProject,
         ]);
     }
 
     public function addTaskAction(Request $request)
     {
-        
+        var_dump($request); die();
         return redirect('home');
     }
 }
