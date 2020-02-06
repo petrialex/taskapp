@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9314a9ec-02cd-432c-805e-05bcd6a05fb0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/views/dashboard.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/taskman.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/taskman.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/ProjectController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Task.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Task.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/custom.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/custom.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/home.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/home.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
@@ -139,13 +140,14 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/Http/Controllers" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/Http/Controllers" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
@@ -163,7 +165,10 @@
       <workItem from="1580756824017" duration="1787000" />
       <workItem from="1580758639134" duration="1820000" />
       <workItem from="1580760488439" duration="1089000" />
-      <workItem from="1580920372290" duration="10847000" />
+      <workItem from="1580920372290" duration="11090000" />
+      <workItem from="1580975434453" duration="30000" />
+      <workItem from="1581000493697" duration="116000" />
+      <workItem from="1581006518339" duration="2542000" />
     </task>
     <servers />
   </component>
@@ -171,13 +176,21 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="605" y="251" width="709" height="538" key="find.popup" timestamp="1580923833135">
+    <state x="743" y="278" width="424" height="484" key="FileChooserDialogImpl" timestamp="1580975461095">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
-    <state x="605" y="251" width="709" height="538" key="find.popup/0.27.1920.988@0.27.1920.988" timestamp="1580923833135" />
-    <state x="623" y="241" width="672" height="678" key="search.everywhere.popup" timestamp="1580923809050">
+    <state x="743" y="278" width="424" height="484" key="FileChooserDialogImpl/0.27.1920.988@0.27.1920.988" timestamp="1580975461095" />
+    <state x="616" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1580975442150">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
-    <state x="623" y="241" width="672" height="678" key="search.everywhere.popup/0.27.1920.988@0.27.1920.988" timestamp="1580923809050" />
+    <state x="616" y="347" key="com.intellij.ide.util.TipDialog/0.27.1920.988@0.27.1920.988" timestamp="1580975442150" />
+    <state x="605" y="251" width="709" height="538" key="find.popup" timestamp="1581006615737">
+      <screen x="0" y="27" width="1920" height="988" />
+    </state>
+    <state x="605" y="251" width="709" height="538" key="find.popup/0.27.1920.988@0.27.1920.988" timestamp="1581006615737" />
+    <state x="623" y="241" width="672" height="678" key="search.everywhere.popup" timestamp="1581006605045">
+      <screen x="0" y="27" width="1920" height="988" />
+    </state>
+    <state x="623" y="241" width="672" height="678" key="search.everywhere.popup/0.27.1920.988@0.27.1920.988" timestamp="1581006605045" />
   </component>
 </project>

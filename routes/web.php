@@ -21,7 +21,10 @@ Route::get('/', 'HomeController@index')->name('home')->middleware('auth');
 Route::get('/profile', 'UserController@index')->name('home')->middleware('auth');
 Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
 Route::get('/dashboard', 'HomeController@showDashboard')->name('dashboard')->middleware('auth');
-Route::post('/add-new-task', 'HomeController@addTask')->name('add-task')->middleware('auth');
+Route::post('/add-new-task', 'TaskController@addTask')->name('add-task')->middleware('auth');
+Route::get('/my-issues', 'ProjectController@showUserIssues')->name('my-issues')->middleware('auth');
+Route::get('/reported-by-me', 'ProjectController@showUserReportedIssues')->name('my-issues')->middleware('auth');
+Route::get('/all-issues', 'HomeController@index')->name('my-issues')->middleware('auth');
 
 
 Route::group(['prefix' => 'admin'], function () {

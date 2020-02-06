@@ -77,9 +77,5 @@ class HomeController extends Controller
         ]);
     }
 
-    public function addTaskAction(Request $request)
-    {
-        var_dump($request); die();
-        return redirect('home');
-    }
+
 }

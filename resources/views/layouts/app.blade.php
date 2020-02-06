@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -22,10 +23,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="https://uselooper.com/assets/vendor/fontawesome/css/all.css">
-    <link rel="stylesheet" href="https://uselooper.com/assets/vendor/tributejs/tribute.css">
-    <link rel="stylesheet" href="https://uselooper.com/assets/vendor/simplemde/simplemde.min.css">
-    <link rel="stylesheet" href="https://uselooper.com/assets/vendor/flatpickr/flatpickr.min.css">END PLUGINS STYLES -->
+
 
 
 </head>
