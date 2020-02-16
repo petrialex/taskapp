@@ -184,14 +184,17 @@
                                                             <!-- .list-group-item-body -->
                                                             <div class="list-group-item-body">
                                                                 <!-- members -->
+                                                                @if($taskUser)
                                                                 <figure class="user-avatar user-avatar-sm"
                                                                         data-toggle="tooltip" title=""
                                                                         data-original-title="">
                                                                     <img
                                                                         src="{{ Voyager::image(  $taskUser->avatar ) }}"
                                                                         alt="{{$taskUser->name}}">
+
                                                                 </figure>
                                                                 {{ $taskUser->name  }}
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
@@ -220,6 +223,7 @@
                                                         </ol>
                                                         <h5 id="modalViewTaskLabel" class="modal-title"> {{ $task->title }} </h5>
                                                         <hr>
+                                                        @if($taskOwner)
                                                         <p class="text-muted"> Opened  by <a href="#" class="link-text"
                                                                                                          data-toggle="tooltip" title=""
                                                                                                          data-original-title="@jgrif"><span
@@ -227,6 +231,7 @@
                                                                             src="{{ Voyager::image(  $taskOwner->avatar ) }}"
                                                                             alt="{{$taskUser->name}}"></span> {{$taskOwner->name}}</a> on <b>{{ $task->created_at }}</b>
                                                         </p>
+                                                        @endif
                                                         <hr>
                                                         <div class="task-description">
                                                             <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit.  Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
@@ -268,9 +273,13 @@
                                                                     <h6> Assignee </h6>
                                                                     <div class="avatar-group">
                                                                          <a href="#" class="user-avatar" data-toggle="tooltip"
-                                                                                                      title="" data-original-title=""><img
+                                                                                                      title="" data-original-title="">
+                                                                             @if($taskUser)
+                                                                             <img
                                                                                     src="{{ Voyager::image(  $taskUser->avatar ) }}"
-                                                                                    alt=""></a>  {{$taskUser->name}}
+                                                                                    alt="">
+                                                                            </a>  {{$taskUser->name}}
+                                                                            @endif
 
                                                                     </div>
                                                                 </div><!-- /.assignee -->
