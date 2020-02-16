@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Priority;
 use App\Task;
+use App\Type;
 use Illuminate\Http\Request;
 use App\Project;
 use App\User;
@@ -33,6 +35,8 @@ class ProjectController extends Controller
         $project = Project::findOrFail($projectId);
         $users = User::all();
         $statuses = Status::all();
+        $priorities = Priority::all();
+        $types = Type::all();
         $projectTasksPerStatus = [];
         foreach ($statuses as $status){
             $projectTasks = Task::where(['project_id' => $projectId, 'status_id' => $status->id, 'user_id' => Auth::id() ])->get();
@@ -47,6 +51,8 @@ class ProjectController extends Controller
             'tasks' => $projectTasksPerStatus,
             'projectTasks' => $currentProjectTasks,
             'projects' => $projects,
+            'priorities' => $priorities,
+            'types' => $types,
         ]);
     }
 
@@ -61,6 +67,8 @@ class ProjectController extends Controller
         $project = Project::findOrFail($projectId);
         $users = User::all();
         $statuses = Status::all();
+        $priorities = Priority::all();
+        $types = Type::all();
         $projectTasksPerStatus = [];
         foreach ($statuses as $status){
             $projectTasks = Task::where(['project_id' => $projectId, 'status_id' => $status->id, 'reported_by' => Auth::id() ])->get();
@@ -75,6 +83,8 @@ class ProjectController extends Controller
             'tasks' => $projectTasksPerStatus,
             'projectTasks' => $currentProjectTasks,
             'projects' => $projects,
+            'priorities' => $priorities,
+            'types' => $types,
         ]);
     }
 

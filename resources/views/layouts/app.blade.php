@@ -12,10 +12,11 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600" rel="stylesheet"><!-- End GOOGLE FONT -->
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"><!-- End GOOGLE FONT -->
 
@@ -23,8 +24,6 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-
-
 
 </head>
 <body>
@@ -46,12 +45,13 @@
 
                 @else
                     <div class="top-bar-item top-bar-item-full">
-                        <form class="top-bar-search">
+                        <form class="top-bar-search" action="" method="get">
                             <div class="input-group input-group-search dropdown">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><span class="fa fa-search"></span></span>
                                 </div>
-                                <input type="text" class="form-control" data-toggle="dropdown" aria-label="Search" placeholder="Search">
+                                <input type="hidden" name="project" value="<?php echo isset($_GET['project'])?$_GET['project']:1 ?>">
+                                <input type="text" class="form-control" name="keyword" data-toggle="dropdown" aria-label="Search" placeholder="Search">
                             </div>
                         </form>
                     </div>
@@ -64,13 +64,12 @@
                             </span>
                             <span class="account-summary pr-lg-4 d-none d-lg-block">
                                 <span class="account-name">{{ Auth::user()->name }}</span>
-                                <span class="account-description">Manager</span >
+
                             </span>
                         </button> <!-- .dropdown-menu -->
                         <div class="dropdown-menu">
                         <div class="dropdown-arrow ml-3"></div>
-                        <h6 class="dropdown-header d-none d-md-block d-lg-none"> Beni Arisandi </h6>
-                            <a class="dropdown-item" href="profile"><span class="dropdown-icon oi oi-person"></span> Profile</a>
+                            <a class="dropdown-item" href="#"><span class="dropdown-icon oi oi-person"></span> Profile</a>
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

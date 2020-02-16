@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Priority;
 use App\Task;
+use App\Type;
 use Illuminate\Http\Request;
 use App\Project;
 use App\User;
@@ -32,10 +34,17 @@ class HomeController extends Controller
         $projectId = $request->get('project')?$request->get('project'):$projects[0]->id;
         $project = Project::findOrFail($projectId);
         $users = User::all();
+        $priorities = Priority::all();
+        $types = Type::all();
         $statuses = Status::all();
         $projectTasksPerStatus = [];
+
         foreach ($statuses as $status){
-            $projectTasks = Task::where(['project_id' => $projectId, 'status_id' => $status->id ])->get();
+            if($request->get('keyword')) {
+                $projectTasks = Task::where(['project_id' => $projectId, 'status_id' => $status->id ])->get();
+            } else {
+                $projectTasks = Task::where(['project_id' => $projectId, 'status_id' => $status->id ])->get();
+            }
             $projectTasksPerStatus[$status->id] = $projectTasks;
         }
         $currentProjectTasks = Task::where(['project_id' => $projectId])->get();
@@ -47,6 +56,8 @@ class HomeController extends Controller
            'tasks' => $projectTasksPerStatus,
            'projectTasks' => $currentProjectTasks,
            'projects' => $projects,
+           'priorities' => $priorities,
+           'types' => $types,
         ]);
     }
 
